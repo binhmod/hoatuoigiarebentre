@@ -7,6 +7,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
 </head>
 <body style="background-color: #fcfdf9; margin: 0; font-family: 'Roboto', sans-serif;">
 
@@ -29,7 +31,9 @@
         <div class="detail-page-box" style="display: flex; flex-wrap: wrap; gap: 32px; background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e1e3dc;">
             
             <div class="detail-img-side" style="flex: 1 1 400px; max-width: 100%; border-radius: 16px; overflow: hidden; background: #f0f1eb; display: flex; align-items: center; justify-content: center; min-height: 400px; box-shadow: inset 0 0 10px rgba(0,0,0,0.02);">
-                <img id="detail-product-img" src="" alt="Ảnh mẫu hoa tươi" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                <a id="detail-product-link" data-fancybox="gallery" href="" style="width: 100%; height: 100%; display: block; cursor: zoom-in;">
+                    <img id="detail-product-img" src="" alt="Ảnh mẫu hoa tươi" style="width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease;">
+                </a>
             </div>
             
             <div class="detail-info-side" style="flex: 1 1 450px; display: flex; flex-direction: column; justify-content: center;">
@@ -40,7 +44,6 @@
                 <div id="detail-product-price" style="font-size: 2.2rem; font-weight: 700; color: #ba1a1a; margin-bottom: 20px; font-family: 'Montserrat', sans-serif;">0đ</div>
                 
                 <div class="detail-description" style="border-top: 1px solid #e1e3dc; padding-top: 20px; color: #444740; line-height: 1.6; font-size: 0.95rem;">
-                   
                    
                 </div>
 
@@ -79,6 +82,21 @@
         <a href="#" id="floating-facebook" target="_blank" class="contact-icon icon-facebook"><i class="fa-brands fa-facebook-f"></i></a>
         <a href="#" id="floating-zalo" target="_blank" class="contact-icon icon-zalo"><img src="images/zalo.svg" alt="Zalo" style="width: 100%; height: 100%; object-fit: contain;"></a>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
+    <script>
+        // Kích hoạt Fancybox cho toàn bộ các phần tử có thuộc tính data-fancybox
+        Fancybox.bind("[data-fancybox]", {
+            // Tùy chọn cấu hình thêm (nếu cần)
+            Toolbar: {
+                display: {
+                    left: ["infobar"],
+                    middle: [],
+                    right: ["zoom", "slideshow", "fullscreen", "close"],
+                },
+            },
+        });
+    </script>
 
     <script src="script.js"></script>
 </body>
