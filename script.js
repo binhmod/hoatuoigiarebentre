@@ -85,22 +85,28 @@ function syncShopInterface() {
     }
 }
 
-// --- HIỂN THỊ NÚT DANH MỤC (ĐÃ TỐI ƯU TỐC ĐỘ RENDER) ---
+// --- HIỂN THỊ NÚT DANH MỤC (TỰ ĐỘNG LẤY ẢNH HOA TRONG THƯ MỤC CÓ SẴN) ---
 function renderCategoriesButtons() {
     const catContainer = document.getElementById('category-list-container');
     if (!catContainer) return;
 
-    let allCategoriesHTML = ''; // Biến tạm gộp toàn bộ chuỗi HTML để giảm tải cho trình duyệt
+    let allCategoriesHTML = ''; 
 
     categoriesList.forEach(cat => {
         const isActive = cat.name === currentCategory ? 'active' : '';
         
-        // Kiểm tra xem danh mục dùng mã HTML icon (nhũ nút Tất cả) hay dùng file ảnh nghệ thuật
         let iconContent = '';
         if (cat.icon_html && cat.icon_html.trim() !== '') {
+            // Trường hợp có mã icon HTML cố định (Ví dụ nút "Tất cả")
             iconContent = cat.icon_html;
         } else {
-            iconContent = `<img src="${cat.image}" alt="${cat.displayName}" onerror="this.src='https://placehold.co/150x150?text=🌸'">`;
+            // 🔥 LOGIC TỰ ĐỘNG THÔNG MINH: Tìm bông hoa đầu tiên thuộc danh mục này
+            const firstProductInCat = products.find(p => p.type === cat.name);
+            
+            // Nếu có hoa trong danh mục thì lấy ảnh của hoa đó, nếu chưa có thì dùng link mặc định/ảnh cover cũ
+            const finalImageSrc = firstProductInCat ? firstProductInCat.image : cat.image;
+
+            iconContent = `<img src="${finalImageSrc}" alt="${cat.displayName}" onerror="this.src='https://placehold.co/150x150?text=🌸'">`;
         }
 
         allCategoriesHTML += `
@@ -113,7 +119,6 @@ function renderCategoriesButtons() {
         `;
     });
 
-    // Chỉ thực hiện cập nhật giao diện đúng một lần duy nhất
     catContainer.innerHTML = allCategoriesHTML;
 }
 
@@ -134,7 +139,7 @@ function renderProducts() {
         return;
     }
 
-    let allProductsHTML = ''; // Biến tạm tích lũy mã HTML của sản phẩm
+    let allProductsHTML = ''; 
 
     filtered.forEach(product => {
         allProductsHTML += `
@@ -153,7 +158,6 @@ function renderProducts() {
         `;
     });
 
-    // Đổ toàn bộ danh sách hoa ra màn hình cùng lúc để trang web load cực nhanh
     container.innerHTML = allProductsHTML;
 }
 
