@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hoa Tươi Giá Rẻ Bến Tre</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="header-centered">
+        <div class="header-logo">
+            <h2 class="font-sans shop-title-main">🌸 Hoa Tươi Giá Rẻ Bến Tre</h2>
+            <p class="shop-slogan">Lan tỏa yêu thương qua từng cánh hoa tươi.</p>
+        </div>
+        <div class="search-container">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="search-input" placeholder="Tìm kiếm mẫu hoa bạn yêu thích..." oninput="handleSearch()">
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="categories-section">
+            <h3 class="section-title font-sans">Danh Mục Thể Loại</h3>
+            <div id="category-list-container" class="category-grid">
+                </div>
+        </section>
+
+        <hr class="divider">
+
+        <section class="products-section">
+            <h3 class="section-title font-sans" id="current-category-title">Tất cả bộ sưu tập</h3>
+            <div id="product-list" class="product-grid">
+                </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-info-block">
+                <h4 class="font-sans">☎️ THÔNG TIN HỖ TRỢ KHÁCH HÀNG</h4>
+                <p style="margin: 8px 0; color: #c5c7c1;"><i class="fa-solid fa-phone" style="width:20px; color:#2e7d32;"></i> <strong>Hotline / Zalo:</strong> <span class="shop-phone-display">0333 330 045</span></p>
+                <p style="margin: 8px 0; color: #c5c7c1;"><i class="fa-solid fa-envelope" style="width:20px; color:#2e7d32;"></i> <strong>Gmail tư vấn:</strong> <span id="shop-gmail-display">hotro@hoatuoigiare-bentre.vn</span></p>
+                <p style="margin: 8px 0; color: #c5c7c1;"><i class="fa-solid fa-location-dot" style="width:20px; color:#2e7d32;"></i> <strong>Địa chỉ:</strong> <span id="shop-address-display">Thành phố Bến Tre</span></p>
+                <p style="margin: 8px 0; color: #c5c7c1;"><i class="fa-solid fa-clock" style="width:20px; color:#2e7d32;"></i> <strong>Giờ mở cửa:</strong> <span id="shop-hours-display">07:00 – 21:00</span></p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 Hoa Tươi Giá Rẻ Bến Tre.</p>
+        </div>
+    </footer>
+
+    <button id="back-to-top-btn" onclick="scrollToTop()" title="Lên đầu trang">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+
+    <div class="floating-contact">
+        <a href="#" id="floating-messenger" target="_blank" class="contact-icon icon-messenger" title="Nhắn tin Messenger">
+            <i class="fa-brands fa-facebook-messenger"></i>
+        </a>
+        <a href="#" id="floating-facebook" target="_blank" class="contact-icon icon-facebook" title="Trang Facebook Shop">
+            <i class="fa-brands fa-facebook-f"></i>
+        </a>
+        <a href="#" id="floating-zalo" target="_blank" class="contact-icon icon-zalo" title="Trò chuyện qua Zalo">
+            <i class="fa-solid fa-comment-dots"></i>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
