@@ -1,4 +1,4 @@
-// Đường dẫn trực tiếp từ GitHub Pages - Không lo lỗi CORS, không cần proxy trung gian
+// Đường dẫn trực tiếp từ GitHub Pages - Đã được tối ưu chống cache
 const DATA_URL = "https://binhmod.github.io/hoatuoigiarebentre/products.json";
 
 let SHOP_CONFIG = {};
@@ -12,14 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchDataOnline();
 });
 
-// --- TẢI DỮ LIỆU TRỰC TIẾP TỪ GITHUB PAGES ---
+// --- TẢI DỮ LIỆU TRỰC TIẾP TỪ GITHUB PAGES (ĐÃ TỐI ƯU CHỐNG CACHE) ---
 function fetchDataOnline() {
     const container = document.getElementById('product-list');
     if (container) {
         container.innerHTML = `<p style="text-align:center; width:100%; color:#666; padding: 40px 0; font-family:'Roboto',sans-serif;">🌸 Đang kết nối dữ liệu cửa hàng...</p>`;
     }
 
-    fetch(DATA_URL)
+    // Thêm tham số thời gian Date.now() để bẻ gãy cache, ép trình duyệt luôn lấy dữ liệu mới nhất
+    fetch(`${DATA_URL}?t=${Date.now()}`)
         .then(response => {
             if (!response.ok) throw new Error("Không thể tải dữ liệu từ GitHub Pages");
             return response.json();
@@ -27,7 +28,6 @@ function fetchDataOnline() {
         .then(data => {
             SHOP_CONFIG = data.shop_config || {};
             products = data.products || [];
-            // Lấy trực tiếp danh mục từ mảng riêng biệt trong file JSON
             categoriesList = data.categories || []; 
 
             // Đồng bộ dữ liệu lên toàn bộ thành phần giao diện trang web
@@ -80,22 +80,22 @@ function syncShopInterface() {
         if (document.getElementById('back-to-top-btn')) {
             window.addEventListener('scroll', handleWindowScroll);
         }
-        // Đã bỏ hàm extractCategoriesFromProducts cũ ở đây để tối ưu tốc độ load
         renderCategoriesButtons();
         renderProducts();
     }
 }
 
-// --- HIỂN THỊ NÚT DANH MỤC ĐƯỢC TÁCH RIÊNG TỪ JSON ---
+// --- HIỂN THỊ NÚT DANH MỤC (ĐÃ TỐI ƯU TỐC ĐỘ RENDER) ---
 function renderCategoriesButtons() {
     const catContainer = document.getElementById('category-list-container');
     if (!catContainer) return;
-    catContainer.innerHTML = '';
+
+    let allCategoriesHTML = ''; // Biến tạm gộp toàn bộ chuỗi HTML để giảm tải cho trình duyệt
 
     categoriesList.forEach(cat => {
         const isActive = cat.name === currentCategory ? 'active' : '';
         
-        // Kiểm tra xem danh mục dùng mã HTML icon (như nút Tất cả) hay dùng file ảnh nghệ thuật
+        // Kiểm tra xem danh mục dùng mã HTML icon (nhũ nút Tất cả) hay dùng file ảnh nghệ thuật
         let iconContent = '';
         if (cat.icon_html && cat.icon_html.trim() !== '') {
             iconContent = cat.icon_html;
@@ -103,7 +103,7 @@ function renderCategoriesButtons() {
             iconContent = `<img src="${cat.image}" alt="${cat.displayName}" onerror="this.src='https://placehold.co/150x150?text=🌸'">`;
         }
 
-        const cardHTML = `
+        allCategoriesHTML += `
             <div class="category-card ${isActive}" id="${cat.id}" onclick="filterByCategory('${cat.name}', '${cat.id}')">
                 <div class="category-img-wrapper">
                     ${iconContent}
@@ -111,15 +111,16 @@ function renderCategoriesButtons() {
                 <span>${cat.displayName}</span>
             </div>
         `;
-        catContainer.innerHTML += cardHTML;
     });
+
+    // Chỉ thực hiện cập nhật giao diện đúng một lần duy nhất
+    catContainer.innerHTML = allCategoriesHTML;
 }
 
-// --- HIỂN THỊ LƯỚI SẢN PHẨM RA TRANG CHỦ ---
+// --- HIỂN THỊ LƯỚI SẢN PHẨM RA TRANG CHỦ (ĐÃ TỐI ƯU SIÊU MƯỢT) ---
 function renderProducts() {
     const container = document.getElementById('product-list');
     if (!container) return;
-    container.innerHTML = ''; 
 
     const filtered = products.filter(product => {
         const matchesCategory = (currentCategory === 'all' || product.type === currentCategory);
@@ -133,11 +134,13 @@ function renderProducts() {
         return;
     }
 
+    let allProductsHTML = ''; // Biến tạm tích lũy mã HTML của sản phẩm
+
     filtered.forEach(product => {
-        const cardHTML = `
+        allProductsHTML += `
             <div class="product-card" onclick="window.location.href='detail.html?id=${product.id}'">
                 <div class="product-img-box">
-                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'">
+                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'" loading="lazy">
                 </div>
                 <div class="product-info">
                     <div class="product-meta">
@@ -148,8 +151,10 @@ function renderProducts() {
                 </div>
             </div>
         `;
-        container.innerHTML += cardHTML;
     });
+
+    // Đổ toàn bộ danh sách hoa ra màn hình cùng lúc để trang web load cực nhanh
+    container.innerHTML = allProductsHTML;
 }
 
 // --- XỬ LÝ LỌC KHI CLICK CHỌN DANH MỤC ---
