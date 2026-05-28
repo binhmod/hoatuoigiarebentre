@@ -1,5 +1,5 @@
 // Đường dẫn trực tiếp từ GitHub Pages - Không lo lỗi CORS, không cần proxy trung gian
-const DATA_URL = "https://binhmod.github.io/hoatuoigiarebentre/products.json";
+const DATA_URL = "https://thaibinhmod.duckdns.org/products.php";
 
 let SHOP_CONFIG = {};
 let products = [];
