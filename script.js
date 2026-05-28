@@ -204,7 +204,8 @@ function initDetailPage() {
         return;
     }
 
-    if (document.getElementById('detail-product-img')) document.getElementById('detail-product-img').src = product.image;
+    document.getElementById('detail-product-img').src = product.image;
+document.getElementById('detail-product-link').href = product.image; // Thêm dòng này để truyền link ảnh sang Fancybox
     if (document.getElementById('detail-product-tag')) document.getElementById('detail-product-tag').innerText = product.type;
     if (document.getElementById('detail-product-name')) document.getElementById('detail-product-name').innerText = product.name;
     if (document.getElementById('detail-product-price')) document.getElementById('detail-product-price').innerText = product.price;
