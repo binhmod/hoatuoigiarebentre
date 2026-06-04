@@ -120,8 +120,8 @@ header.header-centered {
 .category-card.active span { color: var(--md-primary); font-weight: 700; }
 
 /* --- LƯỚI CARD SẢN PHẨM TRANG CHỦ --- */
-.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; }
-@media(max-width: 480px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+.product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 24px; align-items: start; }
+@media(max-width: 480px) { .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; align-items: start; } }
 
 .product-card {
     background: var(--md-surface); border-radius: 20px; overflow: hidden;
