@@ -7,6 +7,32 @@ let categoriesList = [];
 let currentCategory = 'all';
 let searchQuery = '';
 
+// --- TIỆN ÍCH: Chuyển chuỗi tiếng Việt thành slug URL ---
+function toSlug(str) {
+    return str
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'd')
+        .replace(/[^a-z0-9\s-]/g, '')
+        .trim()
+        .replace(/\s+/g, '-')
+        .replace(/-+/g, '-');
+}
+
+// Tạo hash URL dạng: hoa-chuc-mung-khai-truong-1
+function buildDetailHash(product) {
+    return toSlug(product.type) + '-' + product.id;
+}
+
+// Parse hash để lấy id sản phẩm
+function parseDetailHash(hash) {
+    // Hash format: #type-slug-id  (id là phần số cuối)
+    const match = hash.replace('#', '').match(/^(.+)-(\d+)$/);
+    if (match) return parseInt(match[2]);
+    return null;
+}
+
 // Kích hoạt hệ thống ngay khi cấu trúc trang HTML đã sẵn sàng
 document.addEventListener('DOMContentLoaded', () => {
     fetchDataOnline();
@@ -129,8 +155,7 @@ function renderProducts() {
 
     const filtered = products.filter(product => {
         const matchesCategory = (currentCategory === 'all' || product.type === currentCategory);
-        const matchesSearch = product.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                              product.type.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesSearch = product.type.toLowerCase().includes(searchQuery.toLowerCase());
         return matchesCategory && matchesSearch;
     });
 
@@ -139,19 +164,18 @@ function renderProducts() {
         return;
     }
 
-    let allProductsHTML = ''; 
+    let allProductsHTML = '';
 
     filtered.forEach(product => {
+        const hash = buildDetailHash(product);
         allProductsHTML += `
-            <div class="product-card" onclick="window.location.href='detail.html?id=${product.id}'">
+            <div class="product-card" onclick="window.location.href='detail.html#${hash}'">
                 <div class="product-img-box">
-                    <img src="${product.image}" alt="${product.name}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'" loading="lazy">
+                    <img src="${product.image}" alt="${product.type}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'" loading="lazy">
                 </div>
                 <div class="product-info">
                     <div class="product-meta">
                         <span class="product-type-tag font-sans">${product.type}</span>
-                        <h4 class="product-name" style="font-family:'Roboto', sans-serif; font-style:normal; font-weight:500;">${product.name}</h4>
-                        <div class="product-price font-sans">${product.price}</div>
                     </div>
                 </div>
             </div>
@@ -195,8 +219,8 @@ function handleSearch() {
 
 // --- NẠP DỮ LIỆU CHO TRANG CHI TIẾT SẢN PHẨM (DETAIL.HTML) ---
 function initDetailPage() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const productId = parseInt(urlParams.get('id'));
+    // Lấy id từ hash URL: detail.html#hoa-chuc-mung-khai-truong-1
+    const productId = parseDetailHash(window.location.hash);
     const product = products.find(p => p.id === productId);
 
     if (!product) {
@@ -205,14 +229,12 @@ function initDetailPage() {
     }
 
     document.getElementById('detail-product-img').src = product.image;
-document.getElementById('detail-product-link').href = product.image; // Thêm dòng này để truyền link ảnh sang Fancybox
+    document.getElementById('detail-product-link').href = product.image;
     if (document.getElementById('detail-product-tag')) document.getElementById('detail-product-tag').innerText = product.type;
-    if (document.getElementById('detail-product-name')) document.getElementById('detail-product-name').innerText = product.name;
-    if (document.getElementById('detail-product-price')) document.getElementById('detail-product-price').innerText = product.price;
-    document.title = `${product.name} - ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}`;
+    document.title = `${product.type} - ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}`;
 
-    const encodedMessage = encodeURIComponent(`Xin chào shop ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}, mình đang xem mẫu hoa "${product.name}" giá ${product.price} trên website và cần đặt mua giao tận nơi.`);
-    
+    const encodedMessage = encodeURIComponent(`Xin chào shop ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}, mình đang xem mẫu "${product.type}" trên website và cần đặt mua giao tận nơi.`);
+
     // Cấu hình liên kết hành động gửi kèm tin nhắn text mẫu
     if (document.getElementById('detail-btn-zalo')) document.getElementById('detail-btn-zalo').href = `https://zalo.me/${SHOP_CONFIG.zalo_phone || '0333330045'}?text=${encodedMessage}`;
     if (document.getElementById('detail-btn-messenger')) document.getElementById('detail-btn-messenger').href = `https://m.me/${SHOP_CONFIG.messenger_username}`;
