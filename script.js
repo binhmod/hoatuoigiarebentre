@@ -252,23 +252,25 @@ function initDetailPage() {
             `https://m.me/${SHOP_CONFIG.messenger_username || 'vungtau.hoatuoi.9'}?text=${encodedMessage}`;
     }
 
-    // Zalo: không hỗ trợ pre-filled → copy tin nhắn vào clipboard, rồi mở Zalo
+    // Zalo: copy tin nhắn vào clipboard, hiện thông báo, SAU ĐÓ mới mở Zalo (1 lần)
+    const zaloPhone = SHOP_CONFIG.zalo_phone || '0333330045';
+    const zaloUrl = `https://zalo.me/${zaloPhone}`;
     const zaloBtn = document.getElementById('detail-btn-zalo');
     if (zaloBtn) {
-        zaloBtn.removeAttribute('href');
-        zaloBtn.style.cursor = 'pointer';
         zaloBtn.onclick = function(e) {
             e.preventDefault();
+            const orig = zaloBtn.innerHTML;
             navigator.clipboard.writeText(orderMessage).then(() => {
-                const orig = zaloBtn.innerHTML;
-                zaloBtn.innerHTML = `<i class="fa-solid fa-check" style="font-size:1.2rem;"></i> Đã sao chép! Mở Zalo dán vào`;
+                zaloBtn.innerHTML = `<i class="fa-solid fa-check" style="font-size:1.2rem;"></i> Đã sao chép! Đang mở Zalo...`;
+                zaloBtn.disabled = true;
                 setTimeout(() => {
                     zaloBtn.innerHTML = orig;
-                    window.open('https://zalo.me/${SHOP_CONFIG.zalo_phone || "0333330045"}', '_blank');
+                    zaloBtn.disabled = false;
+                    window.open(zaloUrl, '_blank');
                 }, 1200);
             }).catch(() => {
-                // fallback nếu clipboard bị chặn
-                window.open('https://zalo.me/${SHOP_CONFIG.zalo_phone || "0333330045"}', '_blank');
+                // Clipboard bị chặn: mở Zalo luôn không copy
+                window.open(zaloUrl, '_blank');
             });
         };
     }
