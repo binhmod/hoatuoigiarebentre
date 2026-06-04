@@ -7,6 +7,54 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* ===== DETAIL PAGE LAYOUT ===== */
+        .detail-page-box {
+            background: #fff;
+            border-radius: 20px;
+            border: 1px solid #e1e3dc;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column; /* mobile: stack dọc */
+        }
+
+        /* Desktop: 2 cột ngang */
+        @media (min-width: 680px) {
+            .detail-page-box {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+            .detail-img-side {
+                width: 50%;
+                border-right: 1px solid #e1e3dc;
+            }
+            .detail-info-side {
+                width: 50%;
+                padding: 32px 28px;
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 679px) {
+            .detail-info-side {
+                padding: 20px 16px 24px 16px;
+            }
+        }
+
+        .detail-img-side {
+            background: #f7f8f4;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .detail-info-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+    </style>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.css"/>
 </head>
 <body style="background-color: #fcfdf9; margin: 0; font-family: 'Roboto', sans-serif;">
@@ -27,29 +75,37 @@
             </a>
         </div>
 
-        <div class="detail-page-box" style="display: flex; flex-wrap: wrap; gap: 32px; background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e1e3dc; align-items: center;">
-            
-            <div class="detail-img-side" style="flex: 1 1 400px; max-width: 100%; border-radius: 16px; background: #f0f1eb; display: flex; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 10px rgba(0,0,0,0.02);">
-                <a id="detail-product-link" data-fancybox="gallery" href="" style="width: 100%; display: block; cursor: zoom-in; overflow: hidden;">
-                    <img id="detail-product-img" src="" alt="Ảnh mẫu hoa tươi" style="width: 100%; height: auto; display: block; object-fit: contain; transition: transform 0.3s ease;">
+        <!-- Layout: mobile = stack dọc sát nhau | desktop >= 680px = 2 cột -->
+        <div class="detail-page-box">
+            <!-- CỘT ẢNH -->
+            <div class="detail-img-side">
+                <a id="detail-product-link" data-fancybox="gallery" href="" style="display:block; cursor:zoom-in; line-height:0;">
+                    <img id="detail-product-img" src="" alt="Ảnh mẫu hoa tươi" style="width:100%; height:auto; display:block; object-fit:contain;">
                 </a>
-                <button id="detail-btn-download" onclick="downloadFlowerImage()" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 14px 12px; background: #f0f1eb; color: #2e7d32; font-weight: 600; font-size: 0.9rem; border: none; border-top: 1px solid #dde0d8; cursor: pointer; transition: background 0.2s; font-family: inherit;" onmouseover="this.style.background='#d6ebd8'" onmouseout="this.style.background='#f0f1eb'">
+                <button id="detail-btn-download" onclick="downloadFlowerImage()"
+                    style="display:flex; align-items:center; justify-content:center; gap:8px; width:100%; padding:12px; background:#f0f1eb; color:#2e7d32; font-weight:600; font-size:0.9rem; border:none; border-top:1px solid #dde0d8; cursor:pointer; transition:background 0.2s; font-family:inherit;"
+                    onmouseover="this.style.background='#d6ebd8'" onmouseout="this.style.background='#f0f1eb'">
                     <i class="fa-solid fa-download"></i> Tải ảnh về máy
                 </button>
             </div>
-            
-            <div class="detail-info-side" style="flex: 1 1 450px; display: flex; flex-direction: column; justify-content: center;">
-                <span id="detail-product-tag" class="product-type-tag" style="background-color: #d6ebd8; color: #0f2010; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; width: fit-content; text-transform: uppercase; letter-spacing: 0.5px;">Phân loại</span>
-                
-                <div class="modal-action-group" style="margin-top: 24px; display: flex; flex-direction: column; gap: 12px;">
-                    <a href="#" id="detail-btn-zalo" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #2f80ed; color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(47,128,237,0.2); transition: background 0.2s;">
-                        <i class="fa-solid fa-comment-dots" style="font-size: 1.2rem;"></i> Đặt hoa nhanh qua Zalo
+
+            <!-- CỘT THÔNG TIN -->
+            <div class="detail-info-side">
+                <span id="detail-product-tag" class="product-type-tag"
+                    style="background-color:#d6ebd8; color:#0f2010; padding:6px 14px; border-radius:8px; font-weight:600; font-size:0.85rem; width:fit-content; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:20px;">Phân loại</span>
+
+                <div class="modal-action-group" style="display:flex; flex-direction:column; gap:12px;">
+                    <a href="#" id="detail-btn-zalo" target="_blank"
+                        style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2f80ed; color:#fff; text-decoration:none; padding:14px; border-radius:12px; font-weight:600; font-size:1.05rem; box-shadow:0 2px 4px rgba(47,128,237,0.2); transition:opacity 0.2s;">
+                        <i class="fa-solid fa-comment-dots" style="font-size:1.2rem;"></i> Đặt hoa nhanh qua Zalo
                     </a>
-                    <a href="#" id="detail-btn-messenger" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #a334dc; color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(163,52,220,0.2); transition: background 0.2s;">
-                        <i class="fa-brands fa-facebook-messenger" style="font-size: 1.2rem;"></i> Chat Messenger Facebook
+                    <a href="#" id="detail-btn-messenger" target="_blank"
+                        style="display:flex; align-items:center; justify-content:center; gap:10px; background:#a334dc; color:#fff; text-decoration:none; padding:14px; border-radius:12px; font-weight:600; font-size:1.05rem; box-shadow:0 2px 4px rgba(163,52,220,0.2); transition:opacity 0.2s;">
+                        <i class="fa-brands fa-facebook-messenger" style="font-size:1.2rem;"></i> Chat Messenger Facebook
                     </a>
-                    <a href="#" id="detail-btn-call" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #2e7d32; color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(46,125,50,0.2); transition: background 0.2s;">
-                        <i class="fa-solid fa-phone" style="font-size: 1.1rem;"></i> Gọi điện Hotline tư vấn gấp
+                    <a href="#" id="detail-btn-call"
+                        style="display:flex; align-items:center; justify-content:center; gap:10px; background:#2e7d32; color:#fff; text-decoration:none; padding:14px; border-radius:12px; font-weight:600; font-size:1.05rem; box-shadow:0 2px 4px rgba(46,125,50,0.2); transition:opacity 0.2s;">
+                        <i class="fa-solid fa-phone" style="font-size:1.1rem;"></i> Gọi điện Hotline tư vấn gấp
                     </a>
                 </div>
             </div>
@@ -79,7 +135,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@fancyapps/ui@5.0/dist/fancybox/fancybox.umd.js"></script>
     <script>
+        // Kích hoạt Fancybox cho toàn bộ các phần tử có thuộc tính data-fancybox
         Fancybox.bind("[data-fancybox]", {
+            // Tùy chọn cấu hình thêm (nếu cần)
             Toolbar: {
                 display: {
                     left: ["infobar"],
@@ -95,16 +153,11 @@
         const img = document.getElementById('detail-product-img');
         const btn = document.getElementById('detail-btn-download');
         if (!img || !img.src) return;
-        
         const originalHTML = btn.innerHTML;
         btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
         btn.disabled = true;
-
         fetch(img.src)
-            .then(res => {
-                if(!res.ok) throw new Error('Network error');
-                return res.blob();
-            })
+            .then(res => res.blob())
             .then(blob => {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
@@ -119,16 +172,8 @@
                 btn.disabled = false;
             })
             .catch(() => {
-                // Fallback khi dính CORS GitLab: Tạo thẻ <a> ẩn ép tải hoặc mở tab mới
-                const link = document.createElement('a');
-                link.href = img.src;
-                link.target = '_blank';
-                // Thuộc tính download có thể không chạy nếu khác origin, nhưng sẽ mở tab mới để user chuột phải lưu lại dễ dàng
-                link.download = 'hoa-tuoi-bentre.jpg'; 
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                
+                // fallback: mở ảnh trong tab mới để user tự lưu
+                window.open(img.src, '_blank');
                 btn.innerHTML = originalHTML;
                 btn.disabled = false;
             });
