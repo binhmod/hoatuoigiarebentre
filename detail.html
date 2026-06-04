@@ -28,25 +28,23 @@
             </a>
         </div>
 
-        <div class="detail-page-box" style="display: flex; flex-wrap: wrap; gap: 32px; background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e1e3dc;">
+        <div class="detail-page-box" style="display: flex; flex-wrap: wrap; gap: 32px; background: #fff; border-radius: 24px; padding: 24px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); border: 1px solid #e1e3dc; align-items: flex-start;">
             
-            <div class="detail-img-side" style="flex: 1 1 400px; max-width: 100%; border-radius: 16px; background: #f0f1eb; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); padding: 0;">
+            <div class="detail-img-side" style="flex: 1 1 400px; max-width: 100%; border-radius: 16px; background: #f0f1eb; display: flex; flex-direction: column; align-items: stretch; box-shadow: inset 0 0 10px rgba(0,0,0,0.02); padding: 0; align-self: flex-start;">
                 <a id="detail-product-link" data-fancybox="gallery" href="" style="width: 100%; display: block; cursor: zoom-in; border-radius: 16px 16px 0 0; overflow: hidden;">
                     <img id="detail-product-img" src="" alt="Ảnh mẫu hoa tươi" style="width: 100%; height: auto; display: block; object-fit: contain; transition: transform 0.3s ease;">
                 </a>
-                <a id="detail-btn-download" download href="" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: #f0f1eb; border-radius: 0 0 16px 16px; color: #2e7d32; font-weight: 600; font-size: 0.9rem; text-decoration: none; border-top: 1px solid #dde0d8; transition: background 0.2s;" onmouseover="this.style.background='#d6ebd8'" onmouseout="this.style.background='#f0f1eb'">
+                <button id="detail-btn-download" onclick="downloadFlowerImage()" style="display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; padding: 12px; background: #f0f1eb; border-radius: 0 0 16px 16px; color: #2e7d32; font-weight: 600; font-size: 0.9rem; border: none; border-top: 1px solid #dde0d8; cursor: pointer; transition: background 0.2s; font-family: inherit;" onmouseover="this.style.background='#d6ebd8'" onmouseout="this.style.background='#f0f1eb'">
                     <i class="fa-solid fa-download"></i> Tải ảnh về máy
-                </a>
+                </button>
             </div>
             
-            <div class="detail-info-side" style="flex: 1 1 450px; display: flex; flex-direction: column; justify-content: center;">
+            <div class="detail-info-side" style="flex: 1 1 450px; display: flex; flex-direction: column;">
                 <span id="detail-product-tag" class="product-type-tag" style="background-color: #d6ebd8; color: #0f2010; padding: 6px 14px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; width: fit-content; text-transform: uppercase; letter-spacing: 0.5px;">Phân loại</span>
                 
 
                 
-                <div class="detail-description" style="border-top: 1px solid #e1e3dc; padding-top: 20px; color: #444740; line-height: 1.6; font-size: 0.95rem;">
-                   
-                </div>
+
 
                 <div class="modal-action-group" style="margin-top: 28px; display: flex; flex-direction: column; gap: 12px;">
                     <a href="#" id="detail-btn-zalo" target="_blank" style="display: flex; align-items: center; justify-content: center; gap: 10px; background: #2f80ed; color: #fff; text-decoration: none; padding: 14px; border-radius: 12px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 2px 4px rgba(47,128,237,0.2); transition: background 0.2s;">
@@ -99,6 +97,37 @@
         });
     </script>
 
+    <script>
+    function downloadFlowerImage() {
+        const img = document.getElementById('detail-product-img');
+        const btn = document.getElementById('detail-btn-download');
+        if (!img || !img.src) return;
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang tải...';
+        btn.disabled = true;
+        fetch(img.src)
+            .then(res => res.blob())
+            .then(blob => {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                const ext = blob.type.split('/')[1] || 'jpg';
+                a.download = 'hoa-tuoi-' + (img.dataset.productId || Date.now()) + '.' + ext;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            })
+            .catch(() => {
+                // fallback: mở ảnh trong tab mới để user tự lưu
+                window.open(img.src, '_blank');
+                btn.innerHTML = originalHTML;
+                btn.disabled = false;
+            });
+    }
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
