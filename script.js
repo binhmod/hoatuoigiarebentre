@@ -169,13 +169,11 @@ function renderProducts() {
     filtered.forEach(product => {
         const hash = buildDetailHash(product);
         allProductsHTML += `
-            <div class="product-card" onclick="window.location.href='detail.html#${hash}'">
-                <div class="product-img-box">
-                    <img src="${product.image}" alt="${product.type}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'" loading="lazy">
-                </div>
-                <div class="product-info">
-                    <div class="product-meta">
-                        <span class="product-type-tag font-sans">${product.type}</span>
+            <div class="product-card" onclick="window.location.href='detail.html#${hash}'" style="position:relative; overflow:hidden;">
+                <div class="product-img-box" style="position:relative;">
+                    <img src="${product.image}" alt="${product.type}" class="product-image" onerror="this.src='https://placehold.co/400x400?text=Hoa+Tươi'" loading="lazy" style="width:100%; height:auto; display:block; object-fit:contain;">
+                    <div style="position:absolute; bottom:0; left:0; right:0; background:linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 100%); padding:18px 10px 10px 10px; pointer-events:none;">
+                        <span style="color:#fff; font-family:'Montserrat',sans-serif; font-size:0.8rem; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; text-shadow:0 1px 3px rgba(0,0,0,0.4);">${product.type}</span>
                     </div>
                 </div>
             </div>
@@ -230,6 +228,8 @@ function initDetailPage() {
 
     document.getElementById('detail-product-img').src = product.image;
     document.getElementById('detail-product-link').href = product.image;
+    const dlBtn = document.getElementById('detail-btn-download');
+    if (dlBtn) { dlBtn.href = product.image; dlBtn.download = 'hoa-tuoi-' + product.id + '.jpg'; }
     if (document.getElementById('detail-product-tag')) document.getElementById('detail-product-tag').innerText = product.type;
     document.title = `${product.type} - ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}`;
 
