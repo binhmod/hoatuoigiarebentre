@@ -226,7 +226,9 @@ function initDetailPage() {
         return;
     }
 
-    document.getElementById('detail-product-img').src = product.image;
+    const detailImg = document.getElementById('detail-product-img');
+    detailImg.src = product.image;
+    detailImg.dataset.productId = product.id;
     document.getElementById('detail-product-link').href = product.image;
     const dlBtn = document.getElementById('detail-btn-download');
     if (dlBtn) { dlBtn.href = product.image; dlBtn.download = 'hoa-tuoi-' + product.id + '.jpg'; }
