@@ -243,11 +243,36 @@ function initDetailPage() {
     if (document.getElementById('detail-product-tag')) document.getElementById('detail-product-tag').innerText = product.type;
     document.title = `${product.type} - ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}`;
 
-    const encodedMessage = encodeURIComponent(`Xin chào shop ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}, mình đang xem mẫu "${product.type}" trên website và cần đặt mua giao tận nơi.`);
+    const orderMessage = `Xin chào shop ${SHOP_CONFIG.shop_name || 'Hoa Tươi Giá Rẻ Bến Tre'}, mình đang xem mẫu "${product.type}" trên website và cần đặt mua giao tận nơi.`;
+    const encodedMessage = encodeURIComponent(orderMessage);
 
-    // Cấu hình liên kết hành động gửi kèm tin nhắn text mẫu
-    if (document.getElementById('detail-btn-zalo')) document.getElementById('detail-btn-zalo').href = `https://zalo.me/${SHOP_CONFIG.zalo_phone || '0333330045'}?text=${encodedMessage}`;
-    if (document.getElementById('detail-btn-messenger')) document.getElementById('detail-btn-messenger').href = `https://m.me/${SHOP_CONFIG.messenger_username}`;
+    // Messenger: hỗ trợ pre-filled text qua m.me?text=
+    if (document.getElementById('detail-btn-messenger')) {
+        document.getElementById('detail-btn-messenger').href =
+            `https://m.me/${SHOP_CONFIG.messenger_username || 'vungtau.hoatuoi.9'}?text=${encodedMessage}`;
+    }
+
+    // Zalo: không hỗ trợ pre-filled → copy tin nhắn vào clipboard, rồi mở Zalo
+    const zaloBtn = document.getElementById('detail-btn-zalo');
+    if (zaloBtn) {
+        zaloBtn.removeAttribute('href');
+        zaloBtn.style.cursor = 'pointer';
+        zaloBtn.onclick = function(e) {
+            e.preventDefault();
+            navigator.clipboard.writeText(orderMessage).then(() => {
+                const orig = zaloBtn.innerHTML;
+                zaloBtn.innerHTML = `<i class="fa-solid fa-check" style="font-size:1.2rem;"></i> Đã sao chép! Mở Zalo dán vào`;
+                setTimeout(() => {
+                    zaloBtn.innerHTML = orig;
+                    window.open('https://zalo.me/${SHOP_CONFIG.zalo_phone || "0333330045"}', '_blank');
+                }, 1200);
+            }).catch(() => {
+                // fallback nếu clipboard bị chặn
+                window.open('https://zalo.me/${SHOP_CONFIG.zalo_phone || "0333330045"}', '_blank');
+            });
+        };
+    }
+
     if (document.getElementById('detail-btn-call')) document.getElementById('detail-btn-call').href = `tel:${SHOP_CONFIG.phone}`;
 }
 
