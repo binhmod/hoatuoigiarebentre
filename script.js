@@ -1,5 +1,6 @@
 // Đường dẫn trực tiếp từ GitHub Pages - Đã được tối ưu chống cache
-const DATA_URL = "https://binhmod.github.io/hoatuoigiarebentre/products.json";
+const JSONBIN_URL = "https://api.jsonbin.io/v3/b/6a2429c3da38895dfe910a39";
+const JSONBIN_API_KEY = "$2a$10$2i558SK3Q8MpjQkkg5oWCu4HgTAj3V5u9qm3rCtjd8n9dIk2LbrjO";
 
 let SHOP_CONFIG = {};
 let products = [];
@@ -45,22 +46,25 @@ function fetchDataOnline() {
         container.innerHTML = `<p style="text-align:center; width:100%; color:#666; padding: 40px 0; font-family:'Roboto',sans-serif;">🌸 Đang kết nối dữ liệu cửa hàng...</p>`;
     }
 
-    // Thêm tham số thời gian Date.now() để bẻ gãy cache, ép trình duyệt luôn lấy dữ liệu mới nhất
-    fetch(`${DATA_URL}?t=${Date.now()}`)
+    fetch(`${JSONBIN_URL}/latest?meta=false`, {
+        headers: {
+            'X-Access-Key': JSONBIN_API_KEY
+        }
+    })
         .then(response => {
-            if (!response.ok) throw new Error("Không thể tải dữ liệu từ GitHub Pages");
+            if (!response.ok) throw new Error("Không thể tải dữ liệu từ JSONBin");
             return response.json();
         })
         .then(data => {
-            SHOP_CONFIG = data.shop_config || {};
-            products = data.products || [];
-            categoriesList = data.categories || []; 
+            // meta=false → trả thẳng object, không bọc "record"
+            SHOP_CONFIG    = data.shop_config || {};
+            products       = data.products || [];
+            categoriesList = data.categories || [];
 
-            // Đồng bộ dữ liệu lên toàn bộ thành phần giao diện trang web
             syncShopInterface();
         })
         .catch(error => {
-            console.error("Lỗi lấy dữ liệu từ GitHub:", error);
+            console.error("Lỗi lấy dữ liệu từ JSONBin:", error);
             if (container) {
                 container.innerHTML = `<p style="text-align:center; width:100%; color:#ff6f61; padding: 40px 0; font-family:'Roboto',sans-serif;">❌ Lỗi đồng bộ máy chủ trực tuyến. Vui lòng làm mới trang!</p>`;
             }
